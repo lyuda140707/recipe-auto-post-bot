@@ -74,7 +74,7 @@ async def check_and_post():
                 keyboard = InlineKeyboardMarkup().add(
                     InlineKeyboardButton(
                         text="🔍 Подивитись у боті",
-                        url=f"https://t.me/{(await bot.get_me()).username}"
+                        url="https://t.me/recept_kitchen_bot"
                     )
                 )
 
