@@ -23,8 +23,7 @@ TIMEZONE = os.getenv("TIMEZONE", "Europe/Kyiv")
 # Bot init
 bot = Bot(token=BOT_TOKEN)
 import asyncio
-loop = asyncio.get_event_loop()
-dp = Dispatcher(bot, loop=loop)
+dp = Dispatcher(bot)
 tz = pytz.timezone(TIMEZONE)
 
 # Google Sheets auth
@@ -79,7 +78,7 @@ async def check_and_post():
 
                     keyboard = InlineKeyboardMarkup().add(
                         InlineKeyboardButton(
-                            text="🔍 Подивитись у боті",
+                            text="👨‍🍳 Відкрити Рецептик 🍲",
                             url="https://t.me/recept_kitchen_bot"
                         )
                     )
