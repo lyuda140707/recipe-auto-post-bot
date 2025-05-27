@@ -37,12 +37,14 @@ sheet = client.open_by_url("https://docs.google.com/spreadsheets/d/12wRAEC2B0BN1
 # Handler for /start
 @dp.message_handler(commands=["start"])
 async def handle_start(message: types.Message):
-   keyboard = InlineKeyboardMarkup().add(
-    InlineKeyboardButton(
-        text="🔍 Подивитись у боті",
-        url="https://t.me/recept_kitchen_bot"
+    keyboard = InlineKeyboardMarkup().add(
+        InlineKeyboardButton(
+            text="📱 Відкрити меню",
+            web_app=WebAppInfo(url=WEBAPP_URL)
+        )
     )
-)
+    await message.answer("Привіт! 👋 Щоб переглядати рецепти — натисни кнопку нижче ⬇️", reply_markup=keyboard)
+
 
 
 # Background task
@@ -63,13 +65,17 @@ async def check_and_post():
                     continue
 
                 text = row.get("Текст рецепта", "").strip()
+                description = row.get("Опис рецепта", "").strip()
                 photo = row.get("Фото (URL)", "").strip()
                 recipe_id = str(row.get("ID рецепта", "")).strip()
 
                 caption = f"""🍽 <b>{text}</b>
 
-👀 Натисни кнопку нижче, щоб переглянути рецепт у боті Рецептик.
-🔎 Знайди за назвою: <b>{text}</b>"""
+                {description}
+
+               👀 Натисни кнопку нижче, щоб переглянути рецепт у боті Рецептик.
+               🔎 Знайди за назвою: <b>{text}</b>"""
+
 
                 keyboard = InlineKeyboardMarkup().add(
                     InlineKeyboardButton(
