@@ -34,3 +34,8 @@ async def telegram_webhook(request: Request):
     Bot.set_current(bot)
     await dp.process_update(update)
     return {"ok": True}
+
+
+@app.get("/")
+async def root():
+    return {"status": "ok"}
