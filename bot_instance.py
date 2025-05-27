@@ -65,7 +65,7 @@ async def check_and_post():
                     continue
 
                 text = row.get("Текст рецепта", "").strip()
-                description = row.get("Опис рецепта", "").strip()
+                description = (row.get("Опис рецепта") or "").strip()
                 photo = row.get("Фото (URL)", "").strip()
                 recipe_id = str(row.get("ID рецепта", "")).strip()
 
