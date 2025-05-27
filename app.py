@@ -21,8 +21,8 @@ async def startup():
 
 @app.on_event("shutdown")
 async def shutdown():
-    await bot.delete_webhook()
-    logging.info("🛑 Webhook знято")
+    logging.info("🛑 Webhook буде знято автоматично при зупинці")
+
 
 @app.post("/webhook")
 async def telegram_webhook(request: Request):
