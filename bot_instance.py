@@ -22,7 +22,9 @@ TIMEZONE = os.getenv("TIMEZONE", "Europe/Kyiv")
 
 # Bot init
 bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher(bot)
+import asyncio
+loop = asyncio.get_event_loop()
+dp = Dispatcher(bot, loop=loop)
 tz = pytz.timezone(TIMEZONE)
 
 # Google Sheets auth
