@@ -3,6 +3,8 @@ import logging
 from fastapi import FastAPI, Request
 from aiogram import types
 from bot_instance import dp, bot, check_and_post
+from aiogram.dispatcher.dispatcher import Dispatcher
+
 
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 
@@ -24,5 +26,7 @@ async def shutdown():
 async def telegram_webhook(request: Request):
     data = await request.json()
     update = types.Update(**data)
+    Dispatcher.set_current(dp)
+    Bot.set_current(bot)
     await dp.process_update(update)
     return {"ok": True}
