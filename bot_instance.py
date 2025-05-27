@@ -43,6 +43,7 @@ async def handle_start(message: types.Message):
     await message.answer("Привіт! 👋 Щоб переглядати рецепти — натисни кнопку нижче ⬇️", reply_markup=keyboard)
 
 # Background task
+# Background task
 async def check_and_post():
     while True:
         try:
@@ -62,26 +63,27 @@ async def check_and_post():
                 photo = row.get("Фото (URL)", "").strip()
                 recipe_id = str(row.get("ID рецепта", "")).strip()
 
-caption = f"""🍽 <b>{text}</b>
+                caption = f"""🍽 <b>{text}</b>
 
 👀 Натисни кнопку нижче, щоб переглянути рецепт у боті Рецептик.
 🔎 Знайди за назвою: <b>{text}</b>"""
 
-keyboard = InlineKeyboardMarkup().add(
-    InlineKeyboardButton(
-        text="🔍 Подивитись у боті",
-        url=f"https://t.me/{(await bot.get_me()).username}"
-    )
-)
-
+                keyboard = InlineKeyboardMarkup().add(
+                    InlineKeyboardButton(
+                        text="🔍 Подивитись у боті",
+                        url=f"https://t.me/{(await bot.get_me()).username}"
+                    )
+                )
 
                 if photo:
-                    await bot.send_photo(CHANNEL_USERNAME, photo=photo, caption=caption, reply_markup=keyboard)
-                else:
                     await bot.send_photo(CHANNEL_USERNAME, photo=photo, caption=caption, reply_markup=keyboard, parse_mode="HTML")
+                else:
+                    await bot.send_message(CHANNEL_USERNAME, text=caption, reply_markup=keyboard, parse_mode="HTML")
 
+                # Позначити як опубліковано
                 sheet.update_cell(idx, 5, "Опубліковано")
                 logging.info(f"📤 Рецепт ID {recipe_id} надіслано")
+
         except Exception as e:
             logging.error(f"❌ Помилка під час розсилки: {e}")
 
