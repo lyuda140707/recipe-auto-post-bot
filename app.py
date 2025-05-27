@@ -17,7 +17,9 @@ async def startup():
     await bot.set_webhook(WEBHOOK_URL)
     logging.info("✅ Webhook встановлено")
     # фоновий процес розсилки
-    dp.loop.create_task(check_and_post())
+    import asyncio
+    asyncio.create_task(check_and_post())
+
 
 @app.on_event("shutdown")
 async def shutdown():
