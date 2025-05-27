@@ -1,8 +1,10 @@
 import os
+import json
 import logging
 import asyncio
 from datetime import datetime
 import pytz
+from io import StringIO
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
@@ -17,7 +19,6 @@ logging.basicConfig(level=logging.INFO)
 # Load from .env or Render env vars
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHANNEL_USERNAME = os.getenv("CHANNEL_USERNAME")  # e.g. @receptukTop
-GOOGLE_CREDENTIALS_PATH = os.getenv("GOOGLE_CREDENTIALS_PATH", "credentials.json")
 TIMEZONE = os.getenv("TIMEZONE", "Europe/Kyiv")
 WEBAPP_URL = os.getenv("WEBAPP_URL", "https://lyuda140707.github.io/telegram-recipe-webapp/")
 
@@ -27,11 +28,14 @@ dp = Dispatcher(bot)
 # Timezone-aware datetime
 tz = pytz.timezone(TIMEZONE)
 
-# Google Sheets setup
+# Google Sheets setup via JSON in env
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name(GOOGLE_CREDENTIALS_PATH, scope)
+google_creds_raw = os.getenv("GOOGLE_CREDENTIALS_JSON")
+creds_dict = json.loads(google_creds_raw)
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 sheet = client.open_by_url("https://docs.google.com/spreadsheets/d/12wZ-u-lr1uBawVKQn8Oq5qkRg5JJDwAzsYCgUexwUw8/edit").sheet1
+
 
 
 
