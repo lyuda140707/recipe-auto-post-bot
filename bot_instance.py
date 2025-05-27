@@ -56,44 +56,45 @@ async def check_and_post():
             data = sheet.get_all_records()
 
             for idx, row in enumerate(data, start=2):
-                status = row.get("Статус", "").strip().lower()
-                if status != "чекає":
-                    continue
+                try:
+                    status = (row.get("Статус") or "").strip().lower()
+                    if status != "очікує":
+                        continue
 
-                scheduled_time = row.get("Дата і час", "").strip()
-                if scheduled_time != now:
-                    continue
+                    scheduled_time = (row.get("Дата і час") or "").strip()
+                    if scheduled_time != now:
+                        continue
 
-                text = row.get("Текст рецепта", "").strip()
-                description = (row.get("Опис рецепта") or "").strip()
-                photo = row.get("Фото (URL)", "").strip()
-                recipe_id = str(row.get("ID рецепта", "")).strip()
+                    text = (row.get("Текст рецепта") or "").strip()
+                    description = (row.get("Опис рецепта") or "").strip()
+                    photo = (row.get("Фото") or "").strip()
+                    recipe_id = str(row.get("ID рецепта") or "").strip()
 
-                caption = f"""🍽 <b>{text}</b>
+                    caption = f"""🍽 <b>{text}</b>
 
 {description}
 
 👀 Натисни кнопку нижче, щоб переглянути рецепт у боті Рецептик.
 🔎 Знайди за назвою: <b>{text}</b>"""
 
-
-                keyboard = InlineKeyboardMarkup().add(
-                    InlineKeyboardButton(
-                        text="🔍 Подивитись у боті",
-                        url="https://t.me/recept_kitchen_bot"
+                    keyboard = InlineKeyboardMarkup().add(
+                        InlineKeyboardButton(
+                            text="🔍 Подивитись у боті",
+                            url="https://t.me/recept_kitchen_bot"
+                        )
                     )
-                )
 
-                if photo:
-                    await bot.send_photo(CHANNEL_USERNAME, photo=photo, caption=caption, reply_markup=keyboard, parse_mode="HTML")
-                else:
-                    await bot.send_message(CHANNEL_USERNAME, text=caption, reply_markup=keyboard, parse_mode="HTML")
+                    if photo:
+                        await bot.send_photo(CHANNEL_USERNAME, photo=photo, caption=caption, reply_markup=keyboard, parse_mode="HTML")
+                    else:
+                        await bot.send_message(CHANNEL_USERNAME, text=caption, reply_markup=keyboard, parse_mode="HTML")
 
-                # Позначити як опубліковано
-                sheet.update_cell(idx, 5, "Опубліковано")
-                logging.info(f"📤 Рецепт ID {recipe_id} надіслано")
+                    sheet.update_cell(idx, 6, "Опубліковано")  # колонка Статус = 6
+                    logging.info(f"📤 Рецепт ID {recipe_id} надіслано")
+                except Exception as inner_err:
+                    logging.error(f"⚠️ Помилка в рядку {idx}: {inner_err}")
 
         except Exception as e:
-            logging.error(f"❌ Помилка під час розсилки: {e}")
+            logging.error(f"❌ Глобальна помилка в check_and_post: {e}")
 
         await asyncio.sleep(60)
