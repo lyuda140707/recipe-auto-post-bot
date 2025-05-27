@@ -4,6 +4,8 @@ from fastapi import FastAPI, Request
 from aiogram import types
 from bot_instance import dp, bot, check_and_post
 from aiogram.dispatcher.dispatcher import Dispatcher
+from aiogram import Bot
+
 
 
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
