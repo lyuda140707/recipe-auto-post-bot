@@ -37,16 +37,10 @@ sheet = client.open_by_url("https://docs.google.com/spreadsheets/d/12wRAEC2B0BN1
 # Handler for /start
 @dp.message_handler(commands=["start"])
 async def handle_start(message: types.Message):
-    args = message.get_args()
-    if args.startswith("recipe"):
-        recipe_id = args.replace("recipe", "")
-        webapp_link = f"{WEBAPP_URL}?id={recipe_id}"
-        keyboard = InlineKeyboardMarkup().add(
-            InlineKeyboardButton("👀 Відкрити рецепт", web_app=WebAppInfo(url=webapp_link))
-        )
-        await message.answer("Ось повний рецепт 👇", reply_markup=keyboard)
-    else:
-        await message.answer("Привіт! Тут ти зможеш знайти рецепти 🍽")
+    keyboard = InlineKeyboardMarkup().add(
+        InlineKeyboardButton("📱 Відкрити меню", web_app=WebAppInfo(url=WEBAPP_URL))
+    )
+    await message.answer("Привіт! 👋 Щоб переглядати рецепти — натисни кнопку нижче ⬇️", reply_markup=keyboard)
 
 # Background task
 async def check_and_post():
@@ -68,18 +62,23 @@ async def check_and_post():
                 photo = row.get("Фото (URL)", "").strip()
                 recipe_id = str(row.get("ID рецепта", "")).strip()
 
-                caption = f"{text}\n\n👀 Натисни, щоб побачити повний рецепт"
-                keyboard = InlineKeyboardMarkup().add(
-                    InlineKeyboardButton(
-                        text="👀 Подивитись повністю",
-                        url=f"https://t.me/{(await bot.get_me()).username}?start=recipe{recipe_id}"
-                    )
-                )
+caption = f"""🍽 <b>{text}</b>
+
+👀 Натисни кнопку нижче, щоб переглянути рецепт у боті Рецептик.
+🔎 Знайди за назвою: <b>{text}</b>"""
+
+keyboard = InlineKeyboardMarkup().add(
+    InlineKeyboardButton(
+        text="🔍 Подивитись у боті",
+        url=f"https://t.me/{(await bot.get_me()).username}"
+    )
+)
+
 
                 if photo:
                     await bot.send_photo(CHANNEL_USERNAME, photo=photo, caption=caption, reply_markup=keyboard)
                 else:
-                    await bot.send_message(CHANNEL_USERNAME, text=caption, reply_markup=keyboard)
+                    await bot.send_photo(CHANNEL_USERNAME, photo=photo, caption=caption, reply_markup=keyboard, parse_mode="HTML")
 
                 sheet.update_cell(idx, 5, "Опубліковано")
                 logging.info(f"📤 Рецепт ID {recipe_id} надіслано")
