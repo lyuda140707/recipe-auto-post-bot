@@ -34,7 +34,8 @@ google_creds_raw = os.getenv("GOOGLE_CREDENTIALS_JSON")
 creds_dict = json.loads(google_creds_raw)
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
-sheet = client.open_by_url("https://docs.google.com/spreadsheets/d/12wZ-u-lr1uBawVKQn8Oq5qkRg5JJDwAzsYCgUexwUw8/edit").sheet1
+sheet = client.open_by_url("https://docs.google.com/spreadsheets/d/12wRAEC2B0BN135jaNLCMhgFXaIJowKLwq0S9wSJkoxQ/edit").sheet1
+
 
 
 
