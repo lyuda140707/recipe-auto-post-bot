@@ -37,10 +37,13 @@ sheet = client.open_by_url("https://docs.google.com/spreadsheets/d/12wRAEC2B0BN1
 # Handler for /start
 @dp.message_handler(commands=["start"])
 async def handle_start(message: types.Message):
-    keyboard = InlineKeyboardMarkup().add(
-        InlineKeyboardButton("📱 Відкрити меню", web_app=WebAppInfo(url=WEBAPP_URL))
+   keyboard = InlineKeyboardMarkup().add(
+    InlineKeyboardButton(
+        text="🔍 Подивитись у боті",
+        url="https://t.me/recept_kitchen_bot"
     )
-    await message.answer("Привіт! 👋 Щоб переглядати рецепти — натисни кнопку нижче ⬇️", reply_markup=keyboard)
+)
+
 
 # Background task
 # Background task
