@@ -15,11 +15,18 @@ app = FastAPI()
 async def startup():
     await bot.set_webhook(WEBHOOK_URL)
     logging.info("✅ Webhook встановлено")
-    import asyncio
+
+    # Старт фонової задачі
     asyncio.create_task(check_and_post())
 
-    # ❗ Залишає процес живим
-    asyncio.create_task(asyncio.sleep(999999999))
+    # Утримує FastAPI сервіс живим
+    asyncio.create_task(wait_forever())
+
+# Додаємо функцію, яка "вічно чекає"
+async def wait_forever():
+    while True:
+        await asyncio.sleep(3600)
+
 
 @app.on_event("shutdown")
 async def shutdown():
