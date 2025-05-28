@@ -15,7 +15,8 @@ app = FastAPI()
 async def startup():
     await bot.set_webhook(WEBHOOK_URL)
     logging.info("✅ Webhook встановлено")
-    bot.loop.create_task(check_and_post())
+    import asyncio
+    asyncio.create_task(check_and_post())
 
     # ❗ Залишає процес живим
     asyncio.create_task(asyncio.sleep(999999999))
