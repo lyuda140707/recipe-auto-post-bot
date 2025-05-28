@@ -31,7 +31,7 @@ async def telegram_webhook(request: Request):
     Dispatcher.set_current(dp)
     Bot.set_current(bot)
     await dp.process_update(update)
-    return {"ok": True"}
+    return {"ok": True}
 
 @app.get("/")
 async def root():
