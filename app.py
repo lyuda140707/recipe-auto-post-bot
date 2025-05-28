@@ -15,12 +15,10 @@ app = FastAPI()
 async def startup():
     await bot.set_webhook(WEBHOOK_URL)
     logging.info("✅ Webhook встановлено")
+    asyncio.create_task(check_and_post())  # Фонова задача
 
-    # ✅ Стартуємо фонову перевірку Google Таблиці
-    asyncio.create_task(check_and_post())
 
-    # 🟡 Блокуємо завершення процесу
-    await asyncio.Event().wait()
+
 
 @app.on_event("shutdown")
 async def shutdown():
