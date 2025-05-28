@@ -11,13 +11,21 @@ WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 
 app = FastAPI()
 
+# 🟡 Функція утримання процесу живим
+async def wait_forever():
+    while True:
+        await asyncio.sleep(3600)
+
 @app.on_event("startup")
 async def startup():
     await bot.set_webhook(WEBHOOK_URL)
     logging.info("✅ Webhook встановлено")
 
-    # Запускаємо фонову перевірку
+    # ✅ Стартуємо фонову перевірку Google Таблиці
     asyncio.create_task(check_and_post())
+
+    # ✅ Утримуємо FastAPI живим
+    asyncio.create_task(wait_forever())
 
 @app.on_event("shutdown")
 async def shutdown():
