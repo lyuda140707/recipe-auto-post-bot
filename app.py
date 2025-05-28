@@ -1,6 +1,6 @@
 import os
 import logging
-import asyncio  # 🔺 ОЦЕ додати
+import asyncio
 from fastapi import FastAPI, Request
 from aiogram import types
 from bot_instance import dp, bot, check_and_post
@@ -16,17 +16,8 @@ async def startup():
     await bot.set_webhook(WEBHOOK_URL)
     logging.info("✅ Webhook встановлено")
 
-    # Старт фонової задачі
+    # Запускаємо фонову перевірку
     asyncio.create_task(check_and_post())
-
-    # Утримує FastAPI сервіс живим
-    asyncio.create_task(wait_forever())
-
-# Додаємо функцію, яка "вічно чекає"
-async def wait_forever():
-    while True:
-        await asyncio.sleep(3600)
-
 
 @app.on_event("shutdown")
 async def shutdown():
