@@ -7,6 +7,7 @@ from aiogram import types
 from bot_instance import dp, bot, check_and_post
 from aiogram.dispatcher.dispatcher import Dispatcher
 from aiogram import Bot
+from fastapi import Response
 
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 
@@ -37,9 +38,9 @@ async def telegram_webhook(request: Request):
     return {"ok": True}
 
 
-@app.get("/")
+@app.api_route("/", methods=["GET", "HEAD"])
 async def root():
-    return {"status": "ok"}
+    return Response(content='{"status":"ok"}', media_type="application/json")
 
 
 # Фонова задача для "підтримки життя"
